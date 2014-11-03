@@ -24,36 +24,37 @@ Se ha capturado una sesión SIP (archivo sip.cap.gz), que se puede abrir con Wir
 
 4. Observa por encima el flujo de tramas en el menú de Statistics en IO Graphs. La captura que estamos viendo incluye desde la inicialización (registro) de la aplicación hasta su finalización, con una llamada entremedias.
  ** Filtra por sip para conocer cuándo se envían paquetes SIP. ¿En qué segundos tienen lugar esos envíos? 7s, 14s, 16s, 38s, 39s, 56s 
- ** Y los paquetes con RTP, ¿cuándo se envían? desde el segundo 17 hasta el segundo 38.
+ ** Y los paquetes con RTP, ¿cuándo se envían? Desde el segundo 17 hasta el segundo 38.
 
 
 
 [Al terminar el ejercicio es recomendable hacer commit de los ficheros modificados]
 
 5. Analiza las primeras cuatro tramas de la captura nada más arrancar Ekiga.
- ** ¿Qué servicio es el utilizado en estas tramas?
- ** ¿Cuál es la dirección IP del servidor de nombres del ordenador que ha lanzado Ekiga?
- ** ¿Qué dirección IP (de ekiga.net) devuelve el servicio de nombres?
- ** ¿Por qué se pide también para 35.162.64.86.in-addr.arpa?
+ ** ¿Qué servicio es el utilizado en estas tramas? DNS
+ ** ¿Cuál es la dirección IP del servidor de nombres del ordenador que ha lanzado Ekiga? 80.58.61.250
+ ** ¿Qué dirección IP (de ekiga.net) devuelve el servicio de nombres? 86.64.162.35
+ ** ¿Por qué se pide también para 35.162.64.86.in-addr.arpa? Para nombrar el Host e identificarlo.
 
 
 6. A continuación, hay más de una docena de tramas TCP/HTTP.
- ** ¿Podrías decir la URL que se está pidiendo?
- ** ¿Qué user agent (UA) la está pidiendo?
- ** ¿Qué devuelve el servidor?
- ** Si lanzamos el navegador web, por ejemplo, Mozilla Firefox, y vamos a la misma URL, ¿qué recibimos? ¿Qué es, entonces, lo que está respondiendo el servidor?
+ ** ¿Podrías decir la URL que se está pidiendo? http://ekiga.net/ip/l
+ ** ¿Qué user agent (UA) la está pidiendo? Ekiga
+ ** ¿Qué devuelve el servidor? 83.36.48.212
+ ** Si lanzamos el navegador web, por ejemplo, Mozilla Firefox, y vamos a la misma URL, ¿qué recibimos? ¿Qué es, entonces, lo que está respondiendo el servidor? La ip publica del que la pide.
 
 
 7. Hasta la trama 45 se puede observar una secuencia de tramas del protocolo STUN.
  ** ¿Por qué crees que se hace uso de este protocolo en esta captura? Busca en la Wikipedia.
- ** ¿Estamos tras un NAT?
+	Permite a clientes NAT encontrar su IP publica.
+ ** ¿Estamos tras un NAT? Sí.
 
 
 8. La trama 46 es la primera trama SIP. En un entorno como el de Internet, lo habitual es desconocer la dirección IP de la otra parte al realizar una llamada. Por eso, todo usuario registra su localización en un servidor Registrar. El Registrar guarda información sobre los usuarios en un servidor de localización que puede ser utilizado para localizar usuarios.
- ** ¿Qué dirección IP tiene el servidor Registrar?
- ** ¿A qué puerto (del servidor Registrar) se envían los paquetes SIP?
- ** ¿Qué método SIP utiliza el UA para registrarse?
- ** Además de REGISTER, ¿qué instrucciones SIP entiende el UA?
+ ** ¿Qué dirección IP tiene el servidor Registrar? 86.64.162.35
+ ** ¿A qué puerto (del servidor Registrar) se envían los paquetes SIP? 5060
+ ** ¿Qué método SIP utiliza el UA para registrarse? Register
+ ** Además de REGISTER, ¿qué instrucciones SIP entiende el UA? Invite, ack, options, bye, cancel, notify, refer, message
 
 
 
