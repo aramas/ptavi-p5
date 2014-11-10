@@ -34,7 +34,7 @@ Se ha capturado una sesión SIP (archivo sip.cap.gz), que se puede abrir con Wir
  ** ¿Qué servicio es el utilizado en estas tramas? DNS
  ** ¿Cuál es la dirección IP del servidor de nombres del ordenador que ha lanzado Ekiga? 80.58.61.250
  ** ¿Qué dirección IP (de ekiga.net) devuelve el servicio de nombres? 86.64.162.35
- ** ¿Por qué se pide también para 35.162.64.86.in-addr.arpa? Para nombrar el Host e identificarlo.
+ ** ¿Por qué se pide también para 35.162.64.86.in-addr.arpa? Para pedir la resolucion inversa.
 
 
 6. A continuación, hay más de una docena de tramas TCP/HTTP.
@@ -79,32 +79,32 @@ Se ha capturado una sesión SIP (archivo sip.cap.gz), que se puede abrir con Wir
  ** ¿Qué protocolo(s) se utiliza(n)? DNS, RTP ¿Para qué sirven estos protocolos? DNS localiza y direcciona los equipos, mientras que RTP se encarga de enviar la informacion en tiempo real.
  ** ¿Cuál es el tamaño de paquete de los mismos? En DNS es variable. En RTP todos los paquetes son de 214 bytes.
  ** ¿Se utilizan bits de padding? No
- ** ¿Cuál es la periodicidad de los paquetes que se envían? 0.160 segundos
- ** ¿Cuántos bits/segundo estamos enviando? 38000 bits/segundo
+ ** ¿Cuál es la periodicidad de los paquetes que se envían? 0.2 ms
+ ** ¿Cuántos bits/segundo estamos enviando? 64000 bits/segundo
 
 
 
 [Al terminar el ejercicio es recomendable hacer commit de los ficheros modificados]
 
 12. Vamos a ver más a fondo el intercambio RTP. En Telephony hay una opción RTP. Empecemos mirando los flujos RTP.
- ** ¿Cuántos flujos hay? ¿por qué?
+ ** ¿Cuántos flujos hay? Hay dos flujos ¿por qué? Porque uno es de video y otro de audio.
  ** ¿Cuántos paquetes se pierden? Ninguno.
- ** ¿Cuál es el valor máximo del delta? ¿Y qué es lo que significa el valor de delta?
- ** ¿Cuáles son los valores de jitter (medio y máximo)? ¿Qué quiere decir eso? ¿Estamos ante una conversación de calidad?
+ ** ¿Cuál es el valor máximo del delta? 1290.44 ¿Y qué es lo que significa el valor de delta? Es el retardo.
+ ** ¿Cuáles son los valores de jitter (medio y máximo)? Max jitter = 119.64 ms. Mean jitter = 42.50 ms. ¿Qué quiere decir eso? Son los valores de la variación del retardo ¿Estamos ante una conversación de calidad? No, porque hay mucha variación en el retardo.
 
 
 13. Elige un paquete RTP de audio. Analiza el flujo de audio en Telephony -> RTP -> Stream Analysis.
- ** ¿Cuánto valen el delta y el jitter para el primer paquete que ha llegado?
- ** ¿Podemos saber si éste es el primer paquete que nos han enviado?
- ** Los valores de jitter son menores de 10ms hasta un paquete dado. ¿Cuál?
- ** ¿A qué se debe el cambio tan brusco del jitter?
- ** ¿Es comparable este cambio con el tiempo desde la recepción del paquete anterior? ¿Por qué?
- ** ¿Cuál es la dependencia entre el tiempo transcurrido desde el paquete anterior y el valor de jitter?
+ ** ¿Cuánto valen el delta y el jitter para el primer paquete que ha llegado? Los dos valen 0
+ ** ¿Podemos saber si éste es el primer paquete que nos han enviado? No, porque no tenemos forma de saber si es el primero o el primero se ha perdido.
+ ** Los valores de jitter son menores de 10ms hasta un paquete dado. ¿Cuál? El paquete 247.
+ ** ¿A qué se debe el cambio tan brusco del jitter? A que algo le esta quitando ancho de banda.
+ ** ¿Es comparable este cambio con el tiempo desde la recepción del paquete anterior? ¿Por qué? No, porque la delta sufre variaciones mucho mas significativas que el jitter.
+ ** ¿Cuál es la dependencia entre el tiempo transcurrido desde el paquete anterior y el valor de jitter? Cuando aumenta el retardo aumenta el jitter y cuando disminuye el retardo disminuye el jitter.
 
 
 14. En Telephony selecciona el menú VoIP calls. Verás que se lista la llamada de voz IP capturada en una ventana emergente. Selecciona esa llamada y pulsa el botón Graph.
- ** ¿Cuánto dura la conversación?
- ** ¿Cuáles son sus SSRC? ¿Por qué hay varios SSRCs? ¿Hay CSRCs?
+ ** ¿Cuánto dura la conversación? 20.889 segundos.
+ ** ¿Cuáles son sus SSRC? 0x43306582 y 0xBF4AFD37 ¿Por qué hay varios SSRCs? Uno por cada flujo ¿Hay CSRCs? No.
 
 
 15. Identifica la trama donde se finaliza la conversación.
@@ -130,17 +130,18 @@ Captura de una sesión SIP
 Captura una sesión SIP de una conversación con el número SIP sip:9999@qxip.net. Tendrás que dar de alta una cuenta en www.ekiga.net con el navegador. Recuerda también que has de comenzar a capturar tramas antes de arrancar Ekiga para ver todo el proceso en el que participa SIP. Para realizar los siguientes ejercicios, deberás crearte una cuenta en ekiga.net y darte de alta la lanzar la aplicación.
 
 17. Observa las diferencias en el inicio de la conversación entre el entorno del laboratorio y el del ejercicio anterior:
- ** ¿Es necesario el uso de DNS y STUN? ¿Por qué?
- ** ¿Son diferentes el registro y la descripción de la sesión?
+ ** ¿Es necesario el uso de DNS y STUN? DNS si, STUN no ¿Por qué? No estamos detras de un NAT.
+ ** ¿Son diferentes el registro y la descripción de la sesión? No.
 
 
 18. Identifica las diferencias existentes entre esta conversación y la conversación anterior:
- ** ¿Cuántos flujos tenemos?
- ** ¿Cuál es su periodicidad?
- ** ¿Cuánto es el valor máximo del delta y los valores medios y máximo del jitter?
- ** ¿Podrías reproducir la conversación desde Wireshark? ¿Cómo? Comprueba que poniendo un valor demasiado pequeño para el buffer de jitter, la conversación puede no tener la calidad necesaria.
+ ** ¿Cuántos flujos tenemos? 2
+ ** ¿Cuál es su periodicidad? 20 ms
+ ** ¿Cuánto es el valor máximo del delta y los valores medios y máximo del jitter? Max Delta = 22.99 Max Jitter = 0.52 
+Mean Jitter = 0.24
+ ** ¿Podrías reproducir la conversación desde Wireshark? Si ¿Cómo? En la opcion VoIP Calls, en el player. Comprueba que poniendo un valor demasiado pequeño para el buffer de jitter, la conversación puede no tener la calidad necesaria.
  ** ¿Sabrías decir qué tipo de servicio ofrece sip:9999@qxip.net?
-
+Una radio de musica.
 
 
 [Al terminar el ejercicio es recomendable hacer commit de los ficheros modificados]
